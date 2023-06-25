@@ -9,7 +9,6 @@ namespace EncryptionAtRest.Tests
 {
     public class Fixture : IAsyncLifetime
     {
-        public AppDbContext DbContext { get; }
 
         private readonly IContainer _dbContainer;
 
@@ -22,7 +21,11 @@ namespace EncryptionAtRest.Tests
         public Fixture()
         {
             _dbContainer = CreateDbContainer();
-            DbContext = new AppDbContext($"Server=localhost;Port={port};Database={db};User Id={user};Password={password};");
+        }
+
+        public AppDbContext GetDbContext()
+        {
+            return new AppDbContext($"Server=localhost;Port={port};Database={db};User Id={user};Password={password};");
         }
 
         private IContainer CreateDbContainer()
@@ -40,7 +43,7 @@ namespace EncryptionAtRest.Tests
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
-            DbContext.Database.Migrate();
+            GetDbContext().Database.Migrate();
         }
 
         public async Task DisposeAsync()
