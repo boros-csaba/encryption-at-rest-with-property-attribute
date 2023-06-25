@@ -1,6 +1,8 @@
 ﻿
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using EncryptionAtRest.Database;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace EncryptionAtRest.Tests
@@ -11,15 +13,21 @@ namespace EncryptionAtRest.Tests
 
         private readonly IContainer _dbContainer;
 
+        const int port = 5555;
+        const int internalPort = 5432;
+        const string user = "postgres";
+        const string password = "postgres";
+        const string db = "EncryptionAtRestTestDb";
+
         public Fixture()
         {
-            const int port = 5555;
-            const int internalPort = 5432;
-            const string user = "postgres";
-            const string password = "postgres";
-            const string db = "EncryptionAtRestTestDb";
+            _dbContainer = CreateDbContainer();
+            DbContext = new AppDbContext($"Server=localhost;Port={port};Database={db};User Id={user};Password={password};");
+        }
 
-            _dbContainer = new ContainerBuilder()
+        private IContainer CreateDbContainer()
+        {
+            return new ContainerBuilder()
                 .WithImage("postgres:latest")
                 .WithEnvironment("POSTGRES_USER", user)
                 .WithEnvironment("POSTGRES_PASSWORD", password)
@@ -27,13 +35,12 @@ namespace EncryptionAtRest.Tests
                 .WithPortBinding(port, internalPort)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(internalPort))
                 .Build();
-
-            DbContext = new AppDbContext($"Server=localhost;Port={port};Database={db};User Id={user};Password={password};");
         }
 
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
+            DbContext.Database.Migrate();
         }
 
         public async Task DisposeAsync()

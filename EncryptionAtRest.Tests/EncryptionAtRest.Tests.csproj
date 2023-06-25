@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EncryptionAtRest\EncryptionAtRest.csproj" />
+    <ProjectReference Include="..\EncryptionAtRest.Database\EncryptionAtRest.Database.csproj" />
   </ItemGroup>
 
 </Project>
