@@ -1,6 +1,7 @@
 ﻿using EncryptionAtRest.Database;
 using EncryptionAtRest.Database.Models;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace EncryptionAtRest.Tests
@@ -15,7 +16,7 @@ namespace EncryptionAtRest.Tests
         }
 
         [Fact]
-        public void DummyTest()
+        public async void DummyTest()
         {
             // Arrange
             var testApi = new Api
@@ -28,6 +29,7 @@ namespace EncryptionAtRest.Tests
 
             // Act
             _db.Apis.Add(testApi);
+            await _db.SaveChangesAsync();
             var testApiFromDb = _db.Apis.Find(testApi.Id);
 
             
@@ -35,6 +37,11 @@ namespace EncryptionAtRest.Tests
             testApiFromDb?.Id.Should().Be(testApi.Id);
             testApiFromDb?.Name.Should().Be(testApi.Name);
             testApiFromDb?.Key.Should().Be(testApi.Key);
+
+            var testApiFromDbRaw = _db.Apis.FromSql($"SELECT * FROM \"Apis\"").First();
+            testApiFromDbRaw?.Id.Should().Be(testApi.Id);
+            testApiFromDbRaw?.Name.Should().Be(testApi.Name);
+            testApiFromDbRaw?.Key.Should().Be(testApi.Key);
         }
     }
 }
