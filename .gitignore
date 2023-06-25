@@ -3,7 +3,5 @@
 ################################################################################
 
 /.vs
-/EncryptionAtRest/bin
-/EncryptionAtRest/obj
-/EncryptionAtRest.Tests/bin
-/EncryptionAtRest.Tests/obj
+[Dd]ebug/
+[Oo]bj/

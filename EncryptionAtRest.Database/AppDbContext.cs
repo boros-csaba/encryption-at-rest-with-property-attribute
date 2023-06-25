@@ -1,8 +1,8 @@
 ﻿
-using EncryptionAtRest.Models;
+using EncryptionAtRest.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EncryptionAtRest
+namespace EncryptionAtRest.Database
 {
     public class AppDbContext : DbContext
     {

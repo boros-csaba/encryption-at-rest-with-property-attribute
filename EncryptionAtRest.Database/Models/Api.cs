@@ -1,5 +1,5 @@
 ﻿
-namespace EncryptionAtRest.Models
+namespace EncryptionAtRest.Database.Models
 {
     public class Api
     {

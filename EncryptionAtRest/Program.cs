@@ -1,4 +1,5 @@
 ﻿
+using EncryptionAtRest.Database;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace EncryptionAtRest
