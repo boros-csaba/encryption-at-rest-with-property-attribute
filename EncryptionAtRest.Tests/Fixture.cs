@@ -23,10 +23,9 @@ namespace EncryptionAtRest.Tests
             _dbContainer = CreateDbContainer();
         }
 
-        public AppDbContext GetDbContext()
-        {
-            return new AppDbContext($"Server=localhost;Port={port};Database={db};User Id={user};Password={password};");
-        }
+        public AppDbContext GetDbContext() => new(
+                $"Server=localhost;Port={port};Database={db};User Id={user};Password={password};",
+                GenerateAesKey());
 
         private IContainer CreateDbContainer()
         {
@@ -38,6 +37,14 @@ namespace EncryptionAtRest.Tests
                 .WithPortBinding(port, internalPort)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(internalPort))
                 .Build();
+        }
+
+        private string GenerateAesKey()
+        {
+            using var aes = System.Security.Cryptography.Aes.Create();
+            aes.KeySize = 128;
+            aes.GenerateKey();
+            return Convert.ToBase64String(aes.Key);
         }
 
         public async Task InitializeAsync()

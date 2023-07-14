@@ -8,17 +8,18 @@ namespace EncryptionAtRest.Database
     public class AppDbContext : DbContext
     {
         public DbSet<Api> Apis { get; set; } = null!;
+        private readonly string _encryptionSecretKey;
 
-        public AppDbContext(string connectionString)
+        public AppDbContext(string connectionString, string encryptionSecretKey)
             : base(new DbContextOptionsBuilder().UseNpgsql(connectionString).Options)
         {
+            _encryptionSecretKey = encryptionSecretKey ?? throw new ArgumentNullException(nameof(encryptionSecretKey));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            EncryptedConverter.ApplyValueConverter(modelBuilder);
-            EncryptedConverter.EncryptionSecretKey = "QUFzZHBqZXBqcUBkazMxZAo=";
+            EncryptedConverter.Apply(modelBuilder, _encryptionSecretKey);
         }
     }
 }
