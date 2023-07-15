@@ -1,5 +1,5 @@
 # POC project - Encryption at rest using EF
-A quick proof of concept for implementing encryption at rest using EF and an attribute for easily applying encryption to selected model properties. I also have a tutorial on this topic on my website: TODO add link
+A quick proof of concept for implementing encryption at rest using EF and an attribute for easily applying encryption to selected model properties. I also have a tutorial on this topic on my website: [Encryption at rest using EF](https://www.boroscsaba.com/posts/encryption-at-rest-using-ef/)
 
 ## How it works
 The EncryptionValueConverter class will encrypt values on write and decrypts on read.
